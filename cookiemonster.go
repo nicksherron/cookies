@@ -1,7 +1,6 @@
 package main
 
 import (
-    "golang.org/x/crypto/pbkdf2"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/sha1"
@@ -12,6 +11,8 @@ import (
 	"os/exec"
 	"os/user"
 	"strings"
+
+	"golang.org/x/crypto/pbkdf2"
 
 	_ "github.com/mattn/go-sqlite3"
 )
