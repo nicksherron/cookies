@@ -1,3 +1,5 @@
+// source https://gist.github.com/dacort/bd6a5116224c594b14db
+
 package main
 
 import (
