@@ -68,7 +68,7 @@ func main() {
 
 	output := ""
 	// TODO: Output in Netscape format
-	for _, cookie := range getCookies(domain) {
+	for _, cookie := range GetCookies(domain) {
 		//  device_view=full;
 		tmp := fmt.Sprintf("%v=%v; ", cookie.Key, cookie.DecryptedValue())
 		output = output + tmp
@@ -122,7 +122,7 @@ func getPassword() string {
 	return strings.Trim(string(out), "\n")
 }
 
-func getCookies(domain string) (cookies []Cookie) {
+func GetCookies(domain string) (cookies []Cookie) {
 	usr, _ := user.Current()
 	cookiesFile := fmt.Sprintf("%s/Library/Application Support/Google/Chrome/Default/Cookies", usr.HomeDir)
 
