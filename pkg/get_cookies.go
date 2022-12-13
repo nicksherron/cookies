@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"os/user"
 	"strings"
@@ -21,7 +22,19 @@ var (
 	length     = 16
 	password   = ""
 	iterations = 1003
+
+	// The default path thats checked for cookie db is ~/Library/Application Support/Google/Chrome/Default/Cookies
+	// set "GOOGLE_CHROME_PROFILE" to your profile name if it's not "Default"
+	// eg GOOGLE_CHROME_PROFILE="Profile 1"
+	// would check ~/Library/Application Support/Google/Chrome/Profile 1/Cookies
+	chromeProfile = os.Getenv("GOOGLE_CHROME_PROFILE") // Set this to your Chrome profile name if it's not "Default"
 )
+
+func init() {
+	if chromeProfile == "" {
+		chromeProfile = "Default"
+	}
+}
 
 // Cookie - Items for a cookie
 type Cookie struct {
@@ -80,7 +93,7 @@ func aesStripPadding(data []byte) ([]byte, error) {
 func getPassword() string {
 	parts := strings.Fields("security find-generic-password -wga Chrome")
 	cmd := parts[0]
-	parts = parts[1:len(parts)]
+	parts = parts[1:]
 
 	out, err := exec.Command(cmd, parts...).Output()
 	if err != nil {
@@ -93,7 +106,7 @@ func getPassword() string {
 func GetCookies(domain string) (cookies []Cookie) {
 	usr, _ := user.Current()
 	password = getPassword()
-	cookiesFile := fmt.Sprintf("%s/Library/Application Support/Google/Chrome/Default/Cookies", usr.HomeDir)
+	cookiesFile := fmt.Sprintf("%s/Library/Application Support/Google/Chrome/%s/Cookies", usr.HomeDir, chromeProfile)
 
 	db, err := sql.Open("sqlite3", cookiesFile)
 	if err != nil {
